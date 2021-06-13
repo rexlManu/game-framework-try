@@ -1,0 +1,7 @@
+name: SkyWars
+version: @version@
+author: @author@
+description: @description@
+website: @website@
+main: de.rexlmanu.pluginstube.skywars.plugin.SkyWarsPlugin
+commands:

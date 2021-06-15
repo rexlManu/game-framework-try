@@ -20,34 +20,25 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.skywars.plugin;
+package de.rexlmanu.pluginstube.framework.arena.multi;
 
 import de.rexlmanu.pluginstube.framework.Game;
-import de.rexlmanu.pluginstube.framework.GameFramework;
 import de.rexlmanu.pluginstube.framework.arena.ArenaProvider;
-import de.rexlmanu.pluginstube.framework.gamestate.GameState;
-import org.bukkit.plugin.java.JavaPlugin;
+import de.rexlmanu.pluginstube.framework.arena.container.ArenaContainer;
 
-public class SkyWarsPlugin extends JavaPlugin {
+import java.util.concurrent.CopyOnWriteArrayList;
 
-  private Game game;
+public class MultiArenaProvider implements ArenaProvider {
 
-  public SkyWarsPlugin() {
-    this.game = GameFramework
-      .create(this)
-      .arenaProvider(ArenaProvider.single())
-      .lobbyState(GameState.lobby())
-      .endState(GameState.end())
-      .build();
+  private ArenaContainer arenaContainer;
+
+  @Override
+  public void init(Game game) {
+    this.arenaContainer = new ArenaContainer(new CopyOnWriteArrayList<>());
   }
 
   @Override
-  public void onEnable() {
-    this.game.init();
-  }
-
-  @Override
-  public void onDisable() {
-    this.game.terminate();
+  public void terminate(Game game) {
+    // todo destroy arenas
   }
 }

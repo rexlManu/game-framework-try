@@ -20,34 +20,29 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.skywars.plugin;
+package de.rexlmanu.pluginstube.framework.utility;
 
-import de.rexlmanu.pluginstube.framework.Game;
-import de.rexlmanu.pluginstube.framework.GameFramework;
-import de.rexlmanu.pluginstube.framework.arena.ArenaProvider;
-import de.rexlmanu.pluginstube.framework.gamestate.GameState;
-import org.bukkit.plugin.java.JavaPlugin;
+import lombok.experimental.Accessors;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
-public class SkyWarsPlugin extends JavaPlugin {
-
-  private Game game;
-
-  public SkyWarsPlugin() {
-    this.game = GameFramework
-      .create(this)
-      .arenaProvider(ArenaProvider.single())
-      .lobbyState(GameState.lobby())
-      .endState(GameState.end())
-      .build();
-  }
-
-  @Override
-  public void onEnable() {
-    this.game.init();
-  }
-
-  @Override
-  public void onDisable() {
-    this.game.terminate();
+@Accessors(fluent = true)
+public class PlayerUtils {
+  public static void resetPlayer(Player player) {
+    player.closeInventory();
+    player.getInventory().clear();
+    player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
+    player.setHealth(20);
+    player.setMaxHealth(player.getMaxHealth());
+    player.setFoodLevel(20);
+    player.setGameMode(GameMode.ADVENTURE);
+    player.setAllowFlight(false);
+    player.setVelocity(new Vector(0, 0, 0));
+    player.setLevel(0);
+    player.setExp(0);
+    player.setWalkSpeed(0.2f);
+    player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
   }
 }

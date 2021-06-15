@@ -20,34 +20,22 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.skywars.plugin;
+package de.rexlmanu.pluginstube.framework.events.game;
 
-import de.rexlmanu.pluginstube.framework.Game;
-import de.rexlmanu.pluginstube.framework.GameFramework;
-import de.rexlmanu.pluginstube.framework.arena.ArenaProvider;
-import de.rexlmanu.pluginstube.framework.gamestate.GameState;
-import org.bukkit.plugin.java.JavaPlugin;
+import lombok.experimental.Accessors;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
-public class SkyWarsPlugin extends JavaPlugin {
-
-  private Game game;
-
-  public SkyWarsPlugin() {
-    this.game = GameFramework
-      .create(this)
-      .arenaProvider(ArenaProvider.single())
-      .lobbyState(GameState.lobby())
-      .endState(GameState.end())
-      .build();
-  }
+@Accessors(fluent = true)
+public class GameReadyEvent extends Event {
+  private static final HandlerList HANDLER_LIST = new HandlerList();
 
   @Override
-  public void onEnable() {
-    this.game.init();
+  public HandlerList getHandlers() {
+    return HANDLER_LIST;
   }
 
-  @Override
-  public void onDisable() {
-    this.game.terminate();
+  public static HandlerList getHandlerList() {
+    return HANDLER_LIST;
   }
 }

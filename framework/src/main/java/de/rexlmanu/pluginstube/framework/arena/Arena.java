@@ -20,34 +20,43 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.skywars.plugin;
+package de.rexlmanu.pluginstube.framework.arena;
 
-import de.rexlmanu.pluginstube.framework.Game;
-import de.rexlmanu.pluginstube.framework.GameFramework;
-import de.rexlmanu.pluginstube.framework.arena.ArenaProvider;
 import de.rexlmanu.pluginstube.framework.gamestate.GameState;
-import org.bukkit.plugin.java.JavaPlugin;
+import de.rexlmanu.pluginstube.framework.user.User;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
-public class SkyWarsPlugin extends JavaPlugin {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Supplier;
 
-  private Game game;
+@AllArgsConstructor
+@Data
+@Accessors(fluent = true)
+public class Arena {
 
-  public SkyWarsPlugin() {
-    this.game = GameFramework
-      .create(this)
-      .arenaProvider(ArenaProvider.single())
-      .lobbyState(GameState.lobby())
-      .endState(GameState.end())
-      .build();
+  private GameState currentState;
+  private List<User> users;
+
+  public Arena(GameState currentState) {
+    this.currentState = currentState;
+    this.users = new ArrayList<>();
   }
 
-  @Override
-  public void onEnable() {
-    this.game.init();
+  public void broadcast(String message) {
+    this.broadcast(() -> message);
   }
 
-  @Override
-  public void onDisable() {
-    this.game.terminate();
+  public void broadcast(Supplier<String> stringSupplier) {
+    this
+      .users
+      .stream()
+      .map(User::player)
+      .filter(Objects::nonNull)
+      .forEach(player -> player.sendMessage(stringSupplier.get()))
+    ;
   }
 }

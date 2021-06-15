@@ -20,34 +20,39 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.skywars.plugin;
+package de.rexlmanu.pluginstube.framework.events.arena.user.block;
 
-import de.rexlmanu.pluginstube.framework.Game;
-import de.rexlmanu.pluginstube.framework.GameFramework;
-import de.rexlmanu.pluginstube.framework.arena.ArenaProvider;
-import de.rexlmanu.pluginstube.framework.gamestate.GameState;
-import org.bukkit.plugin.java.JavaPlugin;
+import de.rexlmanu.pluginstube.framework.arena.Arena;
+import de.rexlmanu.pluginstube.framework.user.User;
+import lombok.Getter;
+import lombok.experimental.Accessors;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.ItemStack;
 
-public class SkyWarsPlugin extends JavaPlugin {
+@Accessors(fluent = true)
+@Getter
+public class UserBlockPlaceEvent extends BlockPlaceEvent {
+  private static final HandlerList HANDLER_LIST = new HandlerList();
+  private User user;
+  private Arena arena;
 
-  private Game game;
-
-  public SkyWarsPlugin() {
-    this.game = GameFramework
-      .create(this)
-      .arenaProvider(ArenaProvider.single())
-      .lobbyState(GameState.lobby())
-      .endState(GameState.end())
-      .build();
+  public UserBlockPlaceEvent(User user, Arena arena, Block placedBlock, BlockState replacedBlockState, Block placedAgainst, ItemStack itemInHand, Player thePlayer, boolean canBuild) {
+    super(placedBlock, replacedBlockState, placedAgainst, itemInHand, thePlayer, canBuild);
+    this.user = user;
+    this.arena = arena;
   }
 
-  @Override
-  public void onEnable() {
-    this.game.init();
-  }
 
   @Override
-  public void onDisable() {
-    this.game.terminate();
+  public HandlerList getHandlers() {
+    return HANDLER_LIST;
+  }
+
+  public static HandlerList getHandlerList() {
+    return HANDLER_LIST;
   }
 }

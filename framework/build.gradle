@@ -66,12 +66,8 @@ dependencies {
   implementation('org.projectlombok:lombok:1.18.20')
   annotationProcessor('org.projectlombok:lombok:1.18.20')
   implementation('org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT')
-  compile(project(':framework')) {
-    transitive = false
-  }
 }
 
 shadowJar {
   configurations = [project.configurations.compile]
-  archiveFileName = "skywars-${version}.jar"
 }

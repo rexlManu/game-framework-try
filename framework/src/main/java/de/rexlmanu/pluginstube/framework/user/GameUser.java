@@ -20,34 +20,20 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.skywars.plugin;
+package de.rexlmanu.pluginstube.framework.user;
 
-import de.rexlmanu.pluginstube.framework.Game;
-import de.rexlmanu.pluginstube.framework.GameFramework;
-import de.rexlmanu.pluginstube.framework.arena.ArenaProvider;
-import de.rexlmanu.pluginstube.framework.gamestate.GameState;
-import org.bukkit.plugin.java.JavaPlugin;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
-public class SkyWarsPlugin extends JavaPlugin {
+import java.util.UUID;
 
-  private Game game;
+@Accessors(fluent = true)
+@Getter
+class GameUser implements User {
 
-  public SkyWarsPlugin() {
-    this.game = GameFramework
-      .create(this)
-      .arenaProvider(ArenaProvider.single())
-      .lobbyState(GameState.lobby())
-      .endState(GameState.end())
-      .build();
-  }
+  private UUID uniqueId;
 
-  @Override
-  public void onEnable() {
-    this.game.init();
-  }
-
-  @Override
-  public void onDisable() {
-    this.game.terminate();
+  public GameUser(UUID uniqueId) {
+    this.uniqueId = uniqueId;
   }
 }

@@ -1,0 +1,70 @@
+/*
+ * Copyright (c) 2021 Emmanuel Lampe
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+ * OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package de.rexlmanu.pluginstube.framework.events.arena.user.damage;
+
+import com.google.common.base.Function;
+import de.rexlmanu.pluginstube.framework.arena.Arena;
+import de.rexlmanu.pluginstube.framework.events.bukkit.PlayerDamageEvent;
+import de.rexlmanu.pluginstube.framework.user.User;
+import lombok.Getter;
+import lombok.experimental.Accessors;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+
+import java.util.Map;
+
+@Accessors(fluent = true)
+@Getter
+public class UserDamageEvent extends PlayerDamageEvent {
+  private static final HandlerList HANDLER_LIST = new HandlerList();
+  private User user;
+  private Arena arena;
+
+  public UserDamageEvent(User user, Arena arena, Player player, Entity damagee, DamageCause cause, int damage) {
+    super(player, damagee, cause, damage);
+    this.user = user;
+    this.arena = arena;
+  }
+
+  public UserDamageEvent(User user, Arena arena, Player player, Entity damagee, DamageCause cause, double damage) {
+    super(player, damagee, cause, damage);
+    this.user = user;
+    this.arena = arena;
+  }
+
+  public UserDamageEvent(User user, Arena arena, Player player, Entity damagee, DamageCause cause, Map<DamageModifier, Double> modifiers, Map<DamageModifier, ? extends Function<? super Double, Double>> modifierFunctions) {
+    super(player, damagee, cause, modifiers, modifierFunctions);
+    this.user = user;
+    this.arena = arena;
+  }
+
+  @Override
+  public HandlerList getHandlers() {
+    return HANDLER_LIST;
+  }
+
+  public static HandlerList getHandlerList() {
+    return HANDLER_LIST;
+  }
+}

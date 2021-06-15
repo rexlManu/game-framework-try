@@ -20,34 +20,24 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.skywars.plugin;
+package de.rexlmanu.pluginstube.framework.events.bukkit;
 
-import de.rexlmanu.pluginstube.framework.Game;
-import de.rexlmanu.pluginstube.framework.GameFramework;
-import de.rexlmanu.pluginstube.framework.arena.ArenaProvider;
-import de.rexlmanu.pluginstube.framework.gamestate.GameState;
-import org.bukkit.plugin.java.JavaPlugin;
+import lombok.experimental.Accessors;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 
-public class SkyWarsPlugin extends JavaPlugin {
-
-  private Game game;
-
-  public SkyWarsPlugin() {
-    this.game = GameFramework
-      .create(this)
-      .arenaProvider(ArenaProvider.single())
-      .lobbyState(GameState.lobby())
-      .endState(GameState.end())
-      .build();
-  }
-
-  @Override
-  public void onEnable() {
-    this.game.init();
-  }
-
-  @Override
-  public void onDisable() {
-    this.game.terminate();
+@Accessors(fluent = true)
+public class ExtraBukkitEventListener implements Listener {
+  @EventHandler
+  public void handle(EntityDamageEvent event) {
+    if (!(event.getEntity() instanceof Player)) return;
+    Player player = (Player) event.getEntity();
+    PlayerDamageEvent playerDamageEvent = new PlayerDamageEvent(player, event.getEntity(), event.getCause(), event.getDamage());
+    Bukkit.getPluginManager().callEvent(playerDamageEvent);
+    event.setCancelled(playerDamageEvent.isCancelled());
+    event.setDamage(event.getDamage());
   }
 }

@@ -20,34 +20,36 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.skywars.plugin;
+package de.rexlmanu.pluginstube.framework.arena.single;
 
 import de.rexlmanu.pluginstube.framework.Game;
-import de.rexlmanu.pluginstube.framework.GameFramework;
+import de.rexlmanu.pluginstube.framework.arena.Arena;
 import de.rexlmanu.pluginstube.framework.arena.ArenaProvider;
-import de.rexlmanu.pluginstube.framework.gamestate.GameState;
-import org.bukkit.plugin.java.JavaPlugin;
+import de.rexlmanu.pluginstube.framework.arena.container.ArenaContainer;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
-public class SkyWarsPlugin extends JavaPlugin {
+import java.util.Collections;
 
-  private Game game;
+@Accessors(fluent = true)
+@Getter
+public class SingleArenaProvider implements ArenaProvider {
 
-  public SkyWarsPlugin() {
-    this.game = GameFramework
-      .create(this)
-      .arenaProvider(ArenaProvider.single())
-      .lobbyState(GameState.lobby())
-      .endState(GameState.end())
-      .build();
+  private Arena arena;
+  private ArenaContainer arenaContainer;
+
+  public SingleArenaProvider() {
+  }
+
+  public void init(Game game) {
+    this.arena = new Arena(game.lobbyState());
+    this.arenaContainer = new ArenaContainer(Collections.singletonList(this.arena));
+
+    game.register(new SingleArenaListener(game, this));
   }
 
   @Override
-  public void onEnable() {
-    this.game.init();
-  }
-
-  @Override
-  public void onDisable() {
-    this.game.terminate();
+  public void terminate(Game game) {
+    // todo destroy arena
   }
 }

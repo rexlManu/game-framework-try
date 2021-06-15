@@ -20,34 +20,60 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.skywars.plugin;
+package de.rexlmanu.pluginstube.framework;
 
-import de.rexlmanu.pluginstube.framework.Game;
-import de.rexlmanu.pluginstube.framework.GameFramework;
 import de.rexlmanu.pluginstube.framework.arena.ArenaProvider;
 import de.rexlmanu.pluginstube.framework.gamestate.GameState;
+import de.rexlmanu.pluginstube.framework.map.MapProvider;
+import de.rexlmanu.pluginstube.framework.team.TeamProvider;
+import de.rexlmanu.pluginstube.framework.template.TemplateProvider;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class SkyWarsPlugin extends JavaPlugin {
+import java.util.ArrayList;
+import java.util.List;
 
-  private Game game;
+@Accessors(fluent = true)
+public class GameFramework {
 
-  public SkyWarsPlugin() {
-    this.game = GameFramework
-      .create(this)
-      .arenaProvider(ArenaProvider.single())
-      .lobbyState(GameState.lobby())
-      .endState(GameState.end())
-      .build();
+  public static GameFramework create(JavaPlugin javaPlugin) {
+    return new GameFramework(javaPlugin);
   }
 
-  @Override
-  public void onEnable() {
-    this.game.init();
+  @Setter
+  private ArenaProvider arenaProvider;
+  @Setter
+  private MapProvider mapProvider;
+  @Setter
+  private TemplateProvider templateProvider;
+  @Setter
+  private TeamProvider teamProvider;
+  @Setter
+  private GameState lobbyState, endState;
+
+  private JavaPlugin plugin;
+  private List<GameState> playingStates;
+
+  private GameFramework(JavaPlugin plugin) {
+    this.plugin = plugin;
+    this.playingStates = new ArrayList<>();
   }
 
-  @Override
-  public void onDisable() {
-    this.game.terminate();
+  public GameFramework registerPlayingState(GameState gameState) {
+    this.playingStates.add(gameState);
+    return this;
+  }
+
+  public Game build() {
+    return new Game(
+      this.plugin,
+      this.arenaProvider,
+      this.mapProvider,
+      this.templateProvider,
+      this.lobbyState,
+      this.endState,
+      this.playingStates
+    );
   }
 }

@@ -20,9 +20,26 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = 'skywars'
+package de.rexlmanu.pluginstube.framework.modifier.event;
 
-include 'plugin'
-include 'framework'
-include 'editor'
+import lombok.experimental.Accessors;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventException;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.EventExecutor;
 
+@Accessors(fluent = true)
+public class EventModifierExecutor implements EventExecutor {
+
+  public EventModifierExecutor() {
+  }
+
+  @Override
+  public void execute(Listener listener, Event event) throws EventException {
+    if (!(listener instanceof EventModifierImpl)) return;
+    EventModifierImpl<Event> modifier = (EventModifierImpl<Event>) listener;
+    if (modifier.eventClass().equals(event.getClass())) {
+      modifier.eventConsumer().accept(event);
+    }
+  }
+}

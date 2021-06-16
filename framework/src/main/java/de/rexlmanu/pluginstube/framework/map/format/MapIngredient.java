@@ -20,9 +20,37 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = 'skywars'
+package de.rexlmanu.pluginstube.framework.map.format;
 
-include 'plugin'
-include 'framework'
-include 'editor'
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+
+/**
+ * Used for storing the material name and data
+ */
+@Accessors(fluent = true)
+@AllArgsConstructor
+@Data
+public class MapIngredient implements Serializable {
+  /**
+   * The bukkit {@link org.bukkit.Material} name as {@link String#toLowerCase()} variant
+   */
+  private String material;
+  /**
+   * The data of the material
+   */
+  private int data;
+  /**
+   * Should be used for saving extra information like skull owner like for skulls or other blocks that has more then only data
+   */
+  private String customPropertiesJson;
+
+  public MapIngredient(String material, int data) {
+    this.material = material;
+    this.data = data;
+    this.customPropertiesJson = "";
+  }
+}

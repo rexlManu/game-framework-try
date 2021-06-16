@@ -20,9 +20,42 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = 'skywars'
+package de.rexlmanu.pluginstube.framework.map.format;
 
-include 'plugin'
-include 'framework'
-include 'editor'
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * The Schema format for maps
+ */
+@Accessors(fluent = true)
+@AllArgsConstructor
+@Data
+public class MapSchema implements Serializable {
+  /**
+   * The name of the map
+   */
+  private String name;
+  /**
+   * The description of the map, mainly used for builder credits
+   */
+  private String description;
+  /**
+   * Used to store the relative positions with a key
+   */
+  private Map<String, MapPosition> positions;
+  /**
+   * The block data stored as ingredient
+   */
+  private List<MapIngredient> ingredients;
+  /**
+   * The blocks in a region stored with relative positions
+   * Layout is formated for x, y, z, ingredient index
+   */
+  private int[][][] blockLayout;
+}

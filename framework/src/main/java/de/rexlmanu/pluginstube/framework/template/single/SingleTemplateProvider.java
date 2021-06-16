@@ -20,9 +20,23 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = 'skywars'
+package de.rexlmanu.pluginstube.framework.template.single;
 
-include 'plugin'
-include 'framework'
-include 'editor'
+import de.rexlmanu.pluginstube.framework.template.Template;
+import de.rexlmanu.pluginstube.framework.template.TemplateProvider;
+import lombok.experimental.Accessors;
 
+@Accessors(fluent = true)
+public class SingleTemplateProvider implements TemplateProvider {
+
+  private Template template;
+
+  public SingleTemplateProvider(Template template) {
+    this.template = template;
+  }
+
+  @Override
+  public Template template(String name) {
+    return this.template;
+  }
+}

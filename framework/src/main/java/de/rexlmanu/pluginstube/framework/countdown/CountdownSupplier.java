@@ -20,9 +20,12 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = 'skywars'
+package de.rexlmanu.pluginstube.framework.countdown;
 
-include 'plugin'
-include 'framework'
-include 'editor'
+import de.rexlmanu.pluginstube.framework.arena.Arena;
+import lombok.experimental.Accessors;
 
+@Accessors(fluent = true)
+public interface CountdownSupplier {
+  Countdown supply(Arena arena);
+}

@@ -20,22 +20,25 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.framework.events.game;
+package de.rexlmanu.pluginstube.framework.modifier.event;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+
+import java.util.function.Consumer;
 
 @Accessors(fluent = true)
-public class GameReadyEvent extends Event {
-  private static final HandlerList HANDLER_LIST = new HandlerList();
-
-  @Override
-  public HandlerList getHandlers() {
-    return HANDLER_LIST;
+@Getter
+@AllArgsConstructor
+public class EventModifierImpl<E extends Event> implements Listener {
+  public static <E extends Event> EventModifierImpl<E> of(Class<E> eventClass, Consumer<E> consumer) {
+    return new EventModifierImpl<>(eventClass, consumer);
   }
 
-  public static HandlerList getHandlerList() {
-    return HANDLER_LIST;
-  }
+  private Class<E> eventClass;
+  private Consumer<E> eventConsumer;
+
 }

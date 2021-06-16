@@ -23,20 +23,32 @@
 package de.rexlmanu.pluginstube.framework.gamestate;
 
 import de.rexlmanu.pluginstube.framework.arena.Arena;
-import de.rexlmanu.pluginstube.framework.gamestate.end.EndGameState;
-import de.rexlmanu.pluginstube.framework.gamestate.lobby.LobbyGameState;
+import de.rexlmanu.pluginstube.framework.modifier.event.EventModifier;
+import de.rexlmanu.pluginstube.framework.modifier.event.EventModifierImpl;
 import org.bukkit.event.Listener;
 
-public interface GameState extends Listener {
-  static GameState lobby() {
-    return new LobbyGameState();
-  }
+import java.util.List;
 
-  static GameState end() {
-    return new EndGameState();
-  }
+/**
+ * This class should be implemented to represent a state
+ */
+public interface GameState extends Listener {
+  List<EventModifierImpl<?>> eventModifiers();
+
+  /**
+   * Registers a {@link EventModifier} for the game state
+   *
+   * @param eventModifier the modifier
+   */
+  void eventModifier(EventModifierImpl<?> eventModifier);
+
+  void setup(Arena arena);
 
   default boolean isState(Arena arena) {
     return arena.currentState().equals(this);
+  }
+
+  default boolean isNotState(Arena arena) {
+    return !this.isNotState(arena);
   }
 }

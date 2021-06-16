@@ -22,7 +22,7 @@
 
 package de.rexlmanu.pluginstube.framework.arena.multi;
 
-import de.rexlmanu.pluginstube.framework.Game;
+import de.rexlmanu.pluginstube.framework.MiniGame;
 import de.rexlmanu.pluginstube.framework.arena.ArenaProvider;
 import de.rexlmanu.pluginstube.framework.arena.container.ArenaContainer;
 
@@ -33,12 +33,17 @@ public class MultiArenaProvider implements ArenaProvider {
   private ArenaContainer arenaContainer;
 
   @Override
-  public void init(Game game) {
+  public void init(MiniGame miniGame) {
     this.arenaContainer = new ArenaContainer(new CopyOnWriteArrayList<>());
   }
 
   @Override
-  public void terminate(Game game) {
+  public void terminate(MiniGame miniGame) {
     // todo destroy arenas
+  }
+
+  @Override
+  public ArenaContainer arenaContainer() {
+    return null;
   }
 }

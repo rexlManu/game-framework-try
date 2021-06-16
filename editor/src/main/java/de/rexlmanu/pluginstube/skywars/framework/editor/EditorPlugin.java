@@ -20,9 +20,11 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = 'skywars'
+package de.rexlmanu.pluginstube.skywars.framework.editor;
 
-include 'plugin'
-include 'framework'
-include 'editor'
+import lombok.experimental.Accessors;
+import org.bukkit.plugin.java.JavaPlugin;
 
+@Accessors(fluent = true)
+public class EditorPlugin extends JavaPlugin {
+}

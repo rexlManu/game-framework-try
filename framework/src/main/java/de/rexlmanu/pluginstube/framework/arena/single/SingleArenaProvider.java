@@ -22,10 +22,11 @@
 
 package de.rexlmanu.pluginstube.framework.arena.single;
 
-import de.rexlmanu.pluginstube.framework.Game;
+import de.rexlmanu.pluginstube.framework.MiniGame;
 import de.rexlmanu.pluginstube.framework.arena.Arena;
 import de.rexlmanu.pluginstube.framework.arena.ArenaProvider;
 import de.rexlmanu.pluginstube.framework.arena.container.ArenaContainer;
+import de.rexlmanu.pluginstube.framework.template.Template;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -41,15 +42,22 @@ public class SingleArenaProvider implements ArenaProvider {
   public SingleArenaProvider() {
   }
 
-  public void init(Game game) {
-    this.arena = new Arena(game.lobbyState());
-    this.arenaContainer = new ArenaContainer(Collections.singletonList(this.arena));
+  public void init(MiniGame miniGame) {
+    Template template = miniGame.templateProvider().template("");
+    this.arena = new Arena(
+      template,
+      miniGame.lobbyState()
+    );
+    miniGame.lobbyState().setup(this.arena);
 
-    game.register(new SingleArenaListener(game, this));
+    this.arenaContainer = new ArenaContainer(Collections.singletonList(this.arena));
+    this.arena.countdown().start(miniGame.plugin());
+
+    miniGame.register(new SingleArenaListener(miniGame, this));
   }
 
   @Override
-  public void terminate(Game game) {
+  public void terminate(MiniGame miniGame) {
     // todo destroy arena
   }
 }

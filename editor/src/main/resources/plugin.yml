@@ -1,0 +1,7 @@
+name: Editor
+version: @version@
+author: @author@
+description: @description@
+website: @website@
+main: de.rexlmanu.pluginstube.skywars.framework.editor.EditorPlugin
+commands:

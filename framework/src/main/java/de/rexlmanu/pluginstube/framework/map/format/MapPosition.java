@@ -20,9 +20,21 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = 'skywars'
+package de.rexlmanu.pluginstube.framework.map.format;
 
-include 'plugin'
-include 'framework'
-include 'editor'
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+
+/**
+ * Used for to save {@link org.bukkit.Location} as relatives
+ */
+@Accessors(fluent = true)
+@AllArgsConstructor
+@Data
+public class MapPosition implements Serializable {
+  private int x, y, z;
+  private float yaw, pitch;
+}

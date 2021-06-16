@@ -24,6 +24,7 @@ package de.rexlmanu.pluginstube.framework.arena;
 
 import de.rexlmanu.pluginstube.framework.GameInitializer;
 import de.rexlmanu.pluginstube.framework.GameTerminator;
+import de.rexlmanu.pluginstube.framework.arena.container.ArenaContainer;
 import de.rexlmanu.pluginstube.framework.arena.multi.MultiArenaProvider;
 import de.rexlmanu.pluginstube.framework.arena.single.SingleArenaProvider;
 
@@ -35,5 +36,7 @@ public interface ArenaProvider extends GameInitializer, GameTerminator {
   static ArenaProvider multi() {
     return new MultiArenaProvider();
   }
+
+  ArenaContainer arenaContainer();
 
 }

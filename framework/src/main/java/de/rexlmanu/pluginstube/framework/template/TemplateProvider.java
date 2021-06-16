@@ -23,4 +23,5 @@
 package de.rexlmanu.pluginstube.framework.template;
 
 public interface TemplateProvider {
+  public Template template(String name);
 }

@@ -20,9 +20,29 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = 'skywars'
+package de.rexlmanu.pluginstube.framework.events.arena.countdown;
 
-include 'plugin'
-include 'framework'
-include 'editor'
+import de.rexlmanu.pluginstube.framework.arena.Arena;
+import de.rexlmanu.pluginstube.framework.events.ArenaEvent;
+import lombok.Getter;
+import lombok.experimental.Accessors;
+import org.bukkit.event.HandlerList;
 
+@Accessors(fluent = true)
+@Getter
+public class ArenaLobbyCountdownOverEvent extends ArenaEvent {
+  private static final HandlerList HANDLER_LIST = new HandlerList();
+
+  public ArenaLobbyCountdownOverEvent(Arena arena) {
+    super(arena);
+  }
+
+  @Override
+  public HandlerList getHandlers() {
+    return HANDLER_LIST;
+  }
+
+  public static HandlerList getHandlerList() {
+    return HANDLER_LIST;
+  }
+}

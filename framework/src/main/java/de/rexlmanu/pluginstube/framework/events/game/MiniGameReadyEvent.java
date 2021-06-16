@@ -20,9 +20,25 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = 'skywars'
+package de.rexlmanu.pluginstube.framework.events.game;
 
-include 'plugin'
-include 'framework'
-include 'editor'
+import lombok.experimental.Accessors;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
+/**
+ * This event will be fired if the {@link de.rexlmanu.pluginstube.framework.MiniGame} is fully initialized
+ */
+@Accessors(fluent = true)
+public class MiniGameReadyEvent extends Event {
+  private static final HandlerList HANDLER_LIST = new HandlerList();
+
+  @Override
+  public HandlerList getHandlers() {
+    return HANDLER_LIST;
+  }
+
+  public static HandlerList getHandlerList() {
+    return HANDLER_LIST;
+  }
+}

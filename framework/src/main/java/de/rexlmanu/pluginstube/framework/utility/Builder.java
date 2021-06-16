@@ -20,9 +20,18 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = 'skywars'
+package de.rexlmanu.pluginstube.framework.utility;
 
-include 'plugin'
-include 'framework'
-include 'editor'
-
+/**
+ * For declaring a builder
+ *
+ * @param <B> the type that the method builds
+ */
+public interface Builder<B> {
+  /**
+   * Create the specified type as instance
+   *
+   * @return the instance
+   */
+  B build();
+}

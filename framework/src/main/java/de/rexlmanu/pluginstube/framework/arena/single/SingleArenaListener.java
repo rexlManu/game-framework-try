@@ -22,7 +22,9 @@
 
 package de.rexlmanu.pluginstube.framework.arena.single;
 
-import de.rexlmanu.pluginstube.framework.Game;
+import de.rexlmanu.pluginstube.framework.MiniGame;
+import de.rexlmanu.pluginstube.framework.events.arena.ArenaGameStateSwitchEvent;
+import de.rexlmanu.pluginstube.framework.events.arena.countdown.ArenaLobbyCountdownOverEvent;
 import de.rexlmanu.pluginstube.framework.events.arena.user.UserEnterArenaEvent;
 import de.rexlmanu.pluginstube.framework.events.arena.user.UserLeftArenaEvent;
 import de.rexlmanu.pluginstube.framework.events.arena.user.block.UserBlockBreakEvent;
@@ -35,6 +37,7 @@ import de.rexlmanu.pluginstube.framework.events.arena.user.world.UserInteraction
 import de.rexlmanu.pluginstube.framework.events.bukkit.PlayerDamageEvent;
 import de.rexlmanu.pluginstube.framework.events.game.UserJoinEvent;
 import de.rexlmanu.pluginstube.framework.events.game.UserQuitEvent;
+import de.rexlmanu.pluginstube.framework.gamestate.GameState;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,23 +51,23 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 
 class SingleArenaListener implements Listener {
 
-  private Game game;
+  private MiniGame miniGame;
   private SingleArenaProvider arenaProvider;
 
-  public SingleArenaListener(Game game, SingleArenaProvider arenaProvider) {
-    this.game = game;
+  public SingleArenaListener(MiniGame miniGame, SingleArenaProvider arenaProvider) {
+    this.miniGame = miniGame;
     this.arenaProvider = arenaProvider;
   }
 
   @EventHandler
   public void handle(UserJoinEvent event) {
     this.arenaProvider.arena().users().add(event.user());
-    this.game.sync(() -> Bukkit.getPluginManager().callEvent(new UserEnterArenaEvent(event.user(), this.arenaProvider.arena())));
+    this.miniGame.sync(() -> Bukkit.getPluginManager().callEvent(new UserEnterArenaEvent(event.user(), this.arenaProvider.arena())));
   }
 
   @EventHandler
   public void handle(UserQuitEvent event) {
-    this.game.sync(() -> {
+    this.miniGame.sync(() -> {
       Bukkit.getPluginManager().callEvent(new UserLeftArenaEvent(event.user(), event.getPlayer(), this.arenaProvider.arena()));
       this.arenaProvider.arena().users().remove(event.user());
     });
@@ -72,7 +75,7 @@ class SingleArenaListener implements Listener {
 
   @EventHandler
   public void handle(PlayerInteractEvent event) {
-    this.game.userController().search(event.getPlayer().getUniqueId()).ifPresent(user -> {
+    this.miniGame.userController().search(event.getPlayer().getUniqueId()).ifPresent(user -> {
       UserInteractionEvent userInteractionEvent = new UserInteractionEvent(
         user,
         this.arenaProvider.arena(),
@@ -91,7 +94,7 @@ class SingleArenaListener implements Listener {
 
   @EventHandler
   public void handle(PlayerDropItemEvent event) {
-    this.game.userController().search(event.getPlayer().getUniqueId()).ifPresent(user -> {
+    this.miniGame.userController().search(event.getPlayer().getUniqueId()).ifPresent(user -> {
       UserDropItemEvent userDropItemEvent = new UserDropItemEvent(
         user,
         this.arenaProvider.arena(),
@@ -105,7 +108,7 @@ class SingleArenaListener implements Listener {
 
   @EventHandler
   public void handle(PlayerPickupItemEvent event) {
-    this.game.userController().search(event.getPlayer().getUniqueId()).ifPresent(user -> {
+    this.miniGame.userController().search(event.getPlayer().getUniqueId()).ifPresent(user -> {
       UserPickupItemEvent userPickupItemEvent = new UserPickupItemEvent(
         user,
         this.arenaProvider.arena(),
@@ -120,7 +123,7 @@ class SingleArenaListener implements Listener {
 
   @EventHandler
   public void handle(BlockBreakEvent event) {
-    this.game.userController().search(event.getPlayer().getUniqueId()).ifPresent(user -> {
+    this.miniGame.userController().search(event.getPlayer().getUniqueId()).ifPresent(user -> {
       UserBlockBreakEvent userBlockBreakEvent = new UserBlockBreakEvent(
         user,
         this.arenaProvider.arena(),
@@ -135,7 +138,7 @@ class SingleArenaListener implements Listener {
 
   @EventHandler
   public void handle(BlockPlaceEvent event) {
-    this.game.userController().search(event.getPlayer().getUniqueId()).ifPresent(user -> {
+    this.miniGame.userController().search(event.getPlayer().getUniqueId()).ifPresent(user -> {
       UserBlockPlaceEvent userBlockPlaceEvent = new UserBlockPlaceEvent(
         user,
         this.arenaProvider.arena(),
@@ -155,7 +158,7 @@ class SingleArenaListener implements Listener {
   @EventHandler
   public void handle(InventoryClickEvent event) {
     if (!(event.getWhoClicked() instanceof Player)) return;
-    this.game.userController().search(event.getWhoClicked().getUniqueId()).ifPresent(user -> {
+    this.miniGame.userController().search(event.getWhoClicked().getUniqueId()).ifPresent(user -> {
       UserInventoryClickEvent userInventoryClickEvent = new UserInventoryClickEvent(
         user,
         this.arenaProvider.arena(),
@@ -182,7 +185,7 @@ class SingleArenaListener implements Listener {
 
   @EventHandler
   public void handle(PlayerDamageEvent event) {
-    this.game.userController().search(event.player().getUniqueId()).ifPresent(user -> {
+    this.miniGame.userController().search(event.player().getUniqueId()).ifPresent(user -> {
       UserDamageEvent userDamageEvent = new UserDamageEvent(
         user,
         this.arenaProvider.arena(),
@@ -195,6 +198,22 @@ class SingleArenaListener implements Listener {
       event.setCancelled(userDamageEvent.isCancelled());
       event.setDamage(userDamageEvent.getDamage());
     });
+  }
+
+  @EventHandler
+  public void handle(ArenaLobbyCountdownOverEvent event) {
+    if (this.miniGame.playingStates().isEmpty()) {
+      return;
+    }
+    GameState gameState = this.miniGame.playingStates().get(0);
+    Bukkit.getPluginManager().callEvent(new ArenaGameStateSwitchEvent(event.arena(), event.arena().currentState(), gameState));
+    event.arena().countdown().destroy();
+    event.arena().currentState(gameState);
+  }
+
+  @EventHandler
+  public void handle(ArenaGameStateSwitchEvent event) {
+    event.newGameState().setup(event.arena());
   }
 
 }

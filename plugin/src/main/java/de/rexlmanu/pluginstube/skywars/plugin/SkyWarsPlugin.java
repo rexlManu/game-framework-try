@@ -22,32 +22,61 @@
 
 package de.rexlmanu.pluginstube.skywars.plugin;
 
-import de.rexlmanu.pluginstube.framework.Game;
-import de.rexlmanu.pluginstube.framework.GameFramework;
+import de.rexlmanu.pluginstube.framework.MiniGame;
+import de.rexlmanu.pluginstube.framework.MiniGameFramework;
 import de.rexlmanu.pluginstube.framework.arena.ArenaProvider;
-import de.rexlmanu.pluginstube.framework.gamestate.GameState;
+import de.rexlmanu.pluginstube.framework.gamestate.finish.FinishGameState;
+import de.rexlmanu.pluginstube.framework.gamestate.lobby.LobbyCountdown;
+import de.rexlmanu.pluginstube.framework.gamestate.lobby.LobbyGameState;
+import de.rexlmanu.pluginstube.framework.gamestate.lobby.LobbyItem;
+import de.rexlmanu.pluginstube.framework.modifier.event.EventModifier;
+import de.rexlmanu.pluginstube.framework.template.Template;
+import de.rexlmanu.pluginstube.framework.template.single.SingleTemplateProvider;
+import de.rexlmanu.pluginstube.framework.utility.itemstack.ItemStackBuilder;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SkyWarsPlugin extends JavaPlugin {
 
-  private Game game;
+  private MiniGame miniGame;
 
   public SkyWarsPlugin() {
-    this.game = GameFramework
+    this.miniGame = MiniGameFramework
       .create(this)
       .arenaProvider(ArenaProvider.single())
-      .lobbyState(GameState.lobby())
-      .endState(GameState.end())
+      .lobbyState(LobbyGameState
+        .builder()
+        .lobbyItem(LobbyGameState.QUIT_LOBBY_ITEM)
+        .lobbyItem(new LobbyItem(ItemStackBuilder
+          .of(Material.CHEST)
+          .name("&bKitauswahl")
+          .build(),
+          0,
+          user -> user.playSound(Sound.CHEST_OPEN, 1.6f)
+        ))
+        .countdownSupplier(LobbyCountdown::new)
+        .eventModifier(EventModifier.DENY_FOOD_CHANGE)
+        .build()
+      )
+      .finishState(new FinishGameState())
+      .eventModifier(EventModifier.DENY_MOB_SPAWNING)
+      .templateProvider(new SingleTemplateProvider(Template
+        .builder()
+        .name("8x1")
+        .include(Template.arena().maximalPlayers(8))
+        .include(Template.lobbyState().countdown(60).minPlayers(1))
+        .build()))
       .build();
   }
 
   @Override
   public void onEnable() {
-    this.game.init();
+    this.miniGame.init();
   }
 
   @Override
   public void onDisable() {
-    this.game.terminate();
+    this.miniGame.terminate();
   }
 }

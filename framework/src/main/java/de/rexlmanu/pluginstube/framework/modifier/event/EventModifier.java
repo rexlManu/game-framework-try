@@ -20,9 +20,34 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = 'skywars'
+package de.rexlmanu.pluginstube.framework.modifier.event;
 
-include 'plugin'
-include 'framework'
-include 'editor'
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 
+/**
+ * This can be used to modify events simple.
+ * The main purpose for this class is to give already defined options,
+ * so you can use them already without reclaim the work
+ *
+ * @param <E> a class that should be a {@link org.bukkit.event.Event}
+ */
+public interface EventModifier {
+
+  /**
+   * Prevents creatures to spawn, except they spawned by a plugin
+   */
+  EventModifierImpl<CreatureSpawnEvent> DENY_MOB_SPAWNING = new EventModifierImpl<>(
+    CreatureSpawnEvent.class,
+    event -> event.setCancelled(!event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.CUSTOM))
+  );
+
+  /**
+   * Prevents players from changing they food level
+   */
+  EventModifierImpl<FoodLevelChangeEvent> DENY_FOOD_CHANGE = new EventModifierImpl<>(
+    FoodLevelChangeEvent.class,
+    event -> event.setCancelled(true)
+  );
+
+}

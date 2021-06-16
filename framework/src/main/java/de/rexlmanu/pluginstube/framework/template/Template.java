@@ -20,49 +20,55 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.framework.arena;
+package de.rexlmanu.pluginstube.framework.template;
 
-import de.rexlmanu.pluginstube.framework.countdown.Countdown;
-import de.rexlmanu.pluginstube.framework.gamestate.GameState;
-import de.rexlmanu.pluginstube.framework.template.Template;
-import de.rexlmanu.pluginstube.framework.user.User;
+import com.google.gson.JsonObject;
+import de.rexlmanu.pluginstube.framework.template.configuration.ArenaConfiguration;
+import de.rexlmanu.pluginstube.framework.template.configuration.LobbyGameStateConfiguration;
+import de.rexlmanu.pluginstube.framework.utility.Builder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Supplier;
-
+@Accessors(fluent = true)
 @AllArgsConstructor
 @Data
-@Accessors(fluent = true)
-public class Arena {
-
-  private Template template;
-  private GameState currentState;
-  private List<User> users;
-
-  private Countdown countdown;
-
-  public Arena(Template template, GameState currentState) {
-    this.template = template;
-    this.currentState = currentState;
-    this.users = new ArrayList<>();
+public class Template {
+  public static TemplateBuilder builder() {
+    return new TemplateBuilder();
   }
 
-  public void broadcast(String message) {
-    this.broadcast(() -> message);
+  public static ArenaConfiguration arena() {
+    return new ArenaConfiguration(20);
   }
 
-  public void broadcast(Supplier<String> stringSupplier) {
-    this
-      .users
-      .stream()
-      .map(User::player)
-      .filter(Objects::nonNull)
-      .forEach(player -> player.sendMessage(stringSupplier.get()))
-    ;
+  public static LobbyGameStateConfiguration lobbyState() {
+    return new LobbyGameStateConfiguration(1, 60);
+  }
+
+  private String name;
+
+  private JsonObject properties;
+
+  @Accessors(fluent = true)
+  @Setter
+  public static class TemplateBuilder implements Builder<Template> {
+    private String name;
+    private JsonObject jsonObject;
+
+    public TemplateBuilder() {
+      this.jsonObject = new JsonObject();
+    }
+
+    public TemplateBuilder include(TemplateConfiguration configuration) {
+      configuration.apply(this.jsonObject);
+      return this;
+    }
+
+    @Override
+    public Template build() {
+      return new Template(this.name, this.jsonObject);
+    }
   }
 }

@@ -20,27 +20,45 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.framework.arena.container;
+package de.rexlmanu.pluginstube.framework.gamestate.lobby;
 
 import de.rexlmanu.pluginstube.framework.arena.Arena;
-import de.rexlmanu.pluginstube.framework.user.User;
-import lombok.Getter;
+import de.rexlmanu.pluginstube.framework.countdown.Countdown;
+import de.rexlmanu.pluginstube.framework.events.arena.countdown.ArenaLobbyCountdownOverEvent;
 import lombok.experimental.Accessors;
-
-import java.util.List;
-import java.util.Optional;
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 
 @Accessors(fluent = true)
-@Getter
-public class ArenaContainer {
-
-  private List<Arena> arenas;
-
-  public ArenaContainer(List<Arena> arenas) {
-    this.arenas = arenas;
-  }
-
-  public Optional<Arena> arenaByUser(User user) {
-    return this.arenas.stream().filter(arena -> arena.users().contains(user)).findAny();
+public class LobbyCountdown extends Countdown {
+  public LobbyCountdown(Arena arena) {
+    super(
+      arena,
+      second -> {
+        arena.users().forEach(user -> {
+          Player player = user.player();
+          player.setLevel(second);
+          player.setExp(
+            (float) second
+              /
+              (float) arena
+                .template()
+                .properties()
+                .get("lobby-countdown")
+                .getAsInt()
+          );
+          if (second < 11) {
+            user.playSound(Sound.CHICKEN_EGG_POP, 1.2f);
+          }
+          if (second < 6) {
+            player.sendMessage(String.format("Das Spiel fängt in %s Sekunde%s an.", second, second > 1 ? 'n' : ""));
+          }
+        });
+      },
+      finish -> {
+        if (finish) Bukkit.getPluginManager().callEvent(new ArenaLobbyCountdownOverEvent(arena));
+      }
+    );
   }
 }

@@ -20,9 +20,12 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = 'skywars'
+package de.rexlmanu.pluginstube.framework.template;
 
-include 'plugin'
-include 'framework'
-include 'editor'
+import com.google.gson.JsonObject;
 
+public interface TemplateConfiguration {
+
+  void apply(JsonObject object);
+
+}

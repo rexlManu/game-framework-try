@@ -22,9 +22,9 @@
 
 package de.rexlmanu.pluginstube.framework.user;
 
-import de.rexlmanu.pluginstube.framework.Game;
 import de.rexlmanu.pluginstube.framework.GameInitializer;
 import de.rexlmanu.pluginstube.framework.GameTerminator;
+import de.rexlmanu.pluginstube.framework.MiniGame;
 import lombok.experimental.Accessors;
 
 import java.util.List;
@@ -43,12 +43,12 @@ public class UserController implements GameInitializer, GameTerminator {
   }
 
   @Override
-  public void init(Game game) {
-    game.register(new UserEventListener(this));
+  public void init(MiniGame miniGame) {
+    miniGame.register(new UserEventListener(this));
   }
 
   @Override
-  public void terminate(Game game) {
+  public void terminate(MiniGame miniGame) {
     this.users.forEach(this::saveAndRemove);
   }
 

@@ -20,11 +20,35 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.framework.gamestate.end;
+package de.rexlmanu.pluginstube.framework.events.arena;
 
+import de.rexlmanu.pluginstube.framework.arena.Arena;
+import de.rexlmanu.pluginstube.framework.events.ArenaEvent;
 import de.rexlmanu.pluginstube.framework.gamestate.GameState;
+import lombok.Getter;
 import lombok.experimental.Accessors;
+import org.bukkit.event.HandlerList;
 
 @Accessors(fluent = true)
-public class EndGameState implements GameState {
+@Getter
+public class ArenaGameStateSwitchEvent extends ArenaEvent {
+  private static final HandlerList HANDLER_LIST = new HandlerList();
+
+  private GameState oldGameState, newGameState;
+
+  public ArenaGameStateSwitchEvent(Arena arena, GameState oldGameState, GameState newGameState) {
+    super(arena);
+    this.oldGameState = oldGameState;
+    this.newGameState = newGameState;
+  }
+
+  @Override
+  public HandlerList getHandlers() {
+    return HANDLER_LIST;
+  }
+
+  public static HandlerList getHandlerList() {
+    return HANDLER_LIST;
+  }
+
 }

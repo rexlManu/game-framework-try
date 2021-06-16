@@ -22,7 +22,7 @@
 
 package de.rexlmanu.pluginstube.framework.user;
 
-import de.rexlmanu.pluginstube.framework.events.game.GameReadyEvent;
+import de.rexlmanu.pluginstube.framework.events.game.MiniGameReadyEvent;
 import de.rexlmanu.pluginstube.framework.events.game.UserJoinEvent;
 import de.rexlmanu.pluginstube.framework.events.game.UserQuitEvent;
 import de.rexlmanu.pluginstube.framework.utility.ExceptionLogger;
@@ -63,7 +63,7 @@ public class UserEventListener implements Listener {
   }
 
   @EventHandler(priority = EventPriority.LOWEST)
-  public void handle(GameReadyEvent event) {
+  public void handle(MiniGameReadyEvent event) {
     // For handling reloads properly
     Bukkit
       .getOnlinePlayers()

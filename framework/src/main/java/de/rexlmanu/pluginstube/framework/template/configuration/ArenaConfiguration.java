@@ -20,9 +20,23 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = 'skywars'
+package de.rexlmanu.pluginstube.framework.template.configuration;
 
-include 'plugin'
-include 'framework'
-include 'editor'
+import com.google.gson.JsonObject;
+import de.rexlmanu.pluginstube.framework.template.TemplateConfiguration;
+import lombok.AllArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
+@Accessors(fluent = true)
+@Setter
+@AllArgsConstructor
+public class ArenaConfiguration implements TemplateConfiguration {
+
+  private int maximalPlayers;
+
+  @Override
+  public void apply(JsonObject object) {
+    object.addProperty("maximal-players", this.maximalPlayers);
+  }
+}

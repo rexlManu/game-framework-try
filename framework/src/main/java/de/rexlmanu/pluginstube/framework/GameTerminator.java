@@ -24,6 +24,6 @@ package de.rexlmanu.pluginstube.framework;
 
 public interface GameTerminator {
 
-  void terminate(Game game);
+  void terminate(MiniGame miniGame);
 
 }

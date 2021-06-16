@@ -20,60 +20,30 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.framework;
+package de.rexlmanu.pluginstube.framework.gamestate.finish;
 
-import de.rexlmanu.pluginstube.framework.arena.ArenaProvider;
+import de.rexlmanu.pluginstube.framework.arena.Arena;
 import de.rexlmanu.pluginstube.framework.gamestate.GameState;
-import de.rexlmanu.pluginstube.framework.map.MapProvider;
-import de.rexlmanu.pluginstube.framework.team.TeamProvider;
-import de.rexlmanu.pluginstube.framework.template.TemplateProvider;
-import lombok.Setter;
+import de.rexlmanu.pluginstube.framework.modifier.event.EventModifierImpl;
 import lombok.experimental.Accessors;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Accessors(fluent = true)
-public class GameFramework {
-
-  public static GameFramework create(JavaPlugin javaPlugin) {
-    return new GameFramework(javaPlugin);
+public class FinishGameState implements GameState {
+  @Override
+  public List<EventModifierImpl<?>> eventModifiers() {
+    return new ArrayList<>();
   }
 
-  @Setter
-  private ArenaProvider arenaProvider;
-  @Setter
-  private MapProvider mapProvider;
-  @Setter
-  private TemplateProvider templateProvider;
-  @Setter
-  private TeamProvider teamProvider;
-  @Setter
-  private GameState lobbyState, endState;
+  @Override
+  public void eventModifier(EventModifierImpl<?> eventModifier) {
 
-  private JavaPlugin plugin;
-  private List<GameState> playingStates;
-
-  private GameFramework(JavaPlugin plugin) {
-    this.plugin = plugin;
-    this.playingStates = new ArrayList<>();
   }
 
-  public GameFramework registerPlayingState(GameState gameState) {
-    this.playingStates.add(gameState);
-    return this;
-  }
+  @Override
+  public void setup(Arena arena) {
 
-  public Game build() {
-    return new Game(
-      this.plugin,
-      this.arenaProvider,
-      this.mapProvider,
-      this.templateProvider,
-      this.lobbyState,
-      this.endState,
-      this.playingStates
-    );
   }
 }

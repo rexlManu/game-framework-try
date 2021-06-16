@@ -24,6 +24,6 @@ package de.rexlmanu.pluginstube.framework;
 
 public interface GameInitializer {
 
-  void init(Game game);
+  void init(MiniGame miniGame);
 
 }

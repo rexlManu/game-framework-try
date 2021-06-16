@@ -20,9 +20,17 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = 'skywars'
+package de.rexlmanu.pluginstube.framework.events;
 
-include 'plugin'
-include 'framework'
-include 'editor'
+import de.rexlmanu.pluginstube.framework.arena.Arena;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.experimental.Accessors;
+import org.bukkit.event.Event;
 
+@Accessors(fluent = true)
+@Getter
+@AllArgsConstructor
+public abstract class ArenaEvent extends Event {
+  private Arena arena;
+}

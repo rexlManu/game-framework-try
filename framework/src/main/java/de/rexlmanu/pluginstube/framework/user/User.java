@@ -23,16 +23,42 @@
 package de.rexlmanu.pluginstube.framework.user;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
+/**
+ * The user interface
+ */
 public interface User {
 
+  /**
+   * User id represents the id from the actuall {@link Player}
+   *
+   * @return the uuid from the user
+   */
   UUID uniqueId();
 
+  /**
+   * Wrapper to access the bukkit player
+   *
+   * @return wrapped {@link Player}
+   */
   default Player player() {
     return Bukkit.getPlayer(this.uniqueId());
   }
 
+  /**
+   * For better chaining methods together
+   * Plays a sound at the eye location of the player with the default volume 1
+   *
+   * @param sound the sound that should be played
+   * @param pitch the pitch which the sound should be
+   * @return the user instance
+   */
+  default User playSound(Sound sound, float pitch) {
+    this.player().playSound(this.player().getEyeLocation(), sound, 1f, pitch);
+    return this;
+  }
 }

@@ -20,9 +20,26 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = 'skywars'
+package de.rexlmanu.pluginstube.framework.gamestate.lobby;
 
-include 'plugin'
-include 'framework'
-include 'editor'
+import de.rexlmanu.pluginstube.framework.user.User;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.experimental.Accessors;
+import org.bukkit.inventory.ItemStack;
 
+import java.util.function.Consumer;
+
+/**
+ * Items for the lobby that will be executed if a interaction happens
+ */
+@Accessors(fluent = true)
+@AllArgsConstructor
+@Data
+public class LobbyItem {
+
+  private ItemStack itemStack;
+  private int slot;
+  private Consumer<User> userConsumer;
+
+}

@@ -83,6 +83,7 @@ public class MiniGame {
   public void init() {
     this.userController.init(this);
     this.arenaProvider.init(this);
+    this.mapProvider.init(this);
 
     this.registerListeners();
 
@@ -92,6 +93,7 @@ public class MiniGame {
   public void terminate() {
     this.arenaProvider.terminate(this);
     this.userController.terminate(this);
+    this.mapProvider.terminate(this);
   }
 
   /**

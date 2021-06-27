@@ -20,51 +20,20 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.framework.arena;
+package de.rexlmanu.pluginstube.framework.map.bukkit;
 
-import de.rexlmanu.pluginstube.framework.countdown.Countdown;
-import de.rexlmanu.pluginstube.framework.gamestate.GameState;
-import de.rexlmanu.pluginstube.framework.template.Template;
-import de.rexlmanu.pluginstube.framework.user.User;
+import de.rexlmanu.pluginstube.framework.map.format.MapSchema;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.experimental.Accessors;
-import org.bukkit.Location;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Supplier;
-
-@AllArgsConstructor
-@Data
 @Accessors(fluent = true)
-public class Arena {
+@AllArgsConstructor
+public class CalculatedMapSchema {
 
-  private Template template;
-  private GameState currentState;
-  private List<User> users;
+  private MapSchema mapSchema;
 
-  private Countdown countdown;
-  private Location lobbySpawn;
+  public void calculate() {
 
-  public Arena(Template template, GameState currentState) {
-    this.template = template;
-    this.currentState = currentState;
-    this.users = new ArrayList<>();
   }
 
-  public void broadcast(String message) {
-    this.broadcast(() -> message);
-  }
-
-  public void broadcast(Supplier<String> stringSupplier) {
-    this
-      .users
-      .stream()
-      .map(User::player)
-      .filter(Objects::nonNull)
-      .forEach(player -> player.sendMessage(stringSupplier.get()))
-    ;
-  }
 }

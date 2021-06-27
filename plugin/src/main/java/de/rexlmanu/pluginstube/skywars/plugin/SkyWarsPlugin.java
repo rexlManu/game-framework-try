@@ -29,6 +29,7 @@ import de.rexlmanu.pluginstube.framework.gamestate.finish.FinishGameState;
 import de.rexlmanu.pluginstube.framework.gamestate.lobby.LobbyCountdown;
 import de.rexlmanu.pluginstube.framework.gamestate.lobby.LobbyGameState;
 import de.rexlmanu.pluginstube.framework.gamestate.lobby.LobbyItem;
+import de.rexlmanu.pluginstube.framework.map.MapProvider;
 import de.rexlmanu.pluginstube.framework.modifier.event.EventModifier;
 import de.rexlmanu.pluginstube.framework.template.Template;
 import de.rexlmanu.pluginstube.framework.template.single.SingleTemplateProvider;
@@ -42,6 +43,7 @@ public class SkyWarsPlugin extends JavaPlugin {
   private MiniGame miniGame;
 
   public SkyWarsPlugin() {
+    this.getDataFolder().mkdir();
     this.miniGame = MiniGameFramework
       .create(this)
       .arenaProvider(ArenaProvider.single())
@@ -67,6 +69,10 @@ public class SkyWarsPlugin extends JavaPlugin {
         .include(Template.arena().maximalPlayers(8))
         .include(Template.lobbyState().countdown(60).minPlayers(1))
         .build()))
+      .mapProvider(MapProvider.single(
+        this.getDataFolder().toPath().resolve("wartelobby.map"),
+        this.getDataFolder().toPath().resolve("maps")
+      ))
       .build();
   }
 

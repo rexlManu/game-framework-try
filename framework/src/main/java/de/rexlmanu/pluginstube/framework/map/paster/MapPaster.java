@@ -20,22 +20,12 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.framework.map;
+package de.rexlmanu.pluginstube.framework.map.paster;
 
-import de.rexlmanu.pluginstube.framework.GameInitializer;
-import de.rexlmanu.pluginstube.framework.GameTerminator;
-import de.rexlmanu.pluginstube.framework.map.single.SingleMapProvider;
+import org.bukkit.Location;
 
-import java.nio.file.Path;
+public interface MapPaster {
 
-public interface MapProvider extends GameInitializer, GameTerminator {
-
-  static MapProvider single(Path lobbyMap, Path mapDirectory) {
-    return new SingleMapProvider(lobbyMap, mapDirectory);
-  }
-
-  Path lobbyMap();
-
-  Path mapDirectory();
+  void paste(Location position);
 
 }

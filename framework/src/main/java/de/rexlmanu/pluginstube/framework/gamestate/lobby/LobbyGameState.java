@@ -95,6 +95,7 @@ public class LobbyGameState implements GameState {
     PlayerUtils.resetPlayer(player);
     player.setPlayerWeather(WeatherType.CLEAR);
     player.setPlayerTime(2000, false);
+    player.teleport(event.arena().lobbySpawn());
 
     this.lobbyItems.forEach(lobbyItem -> player.getInventory().setItem(lobbyItem.slot(), lobbyItem.itemStack()));
   }

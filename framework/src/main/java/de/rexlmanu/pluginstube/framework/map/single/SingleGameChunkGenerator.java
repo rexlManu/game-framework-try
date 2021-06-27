@@ -20,51 +20,36 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.framework.arena;
+package de.rexlmanu.pluginstube.framework.map.single;
 
-import de.rexlmanu.pluginstube.framework.countdown.Countdown;
-import de.rexlmanu.pluginstube.framework.gamestate.GameState;
-import de.rexlmanu.pluginstube.framework.template.Template;
-import de.rexlmanu.pluginstube.framework.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.experimental.Accessors;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.generator.BlockPopulator;
+import org.bukkit.generator.ChunkGenerator;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Supplier;
+import java.util.Random;
 
-@AllArgsConstructor
-@Data
-@Accessors(fluent = true)
-public class Arena {
+public class SingleGameChunkGenerator extends ChunkGenerator {
 
-  private Template template;
-  private GameState currentState;
-  private List<User> users;
-
-  private Countdown countdown;
-  private Location lobbySpawn;
-
-  public Arena(Template template, GameState currentState) {
-    this.template = template;
-    this.currentState = currentState;
-    this.users = new ArrayList<>();
+  @Override
+  public Location getFixedSpawnLocation(World world, Random random) {
+    return new Location(world, 0, 0, 0);
   }
 
-  public void broadcast(String message) {
-    this.broadcast(() -> message);
+  @Override
+  public ChunkData generateChunkData(World world, Random random, int x, int z, BiomeGrid biome) {
+    return this.createChunkData(world);
   }
 
-  public void broadcast(Supplier<String> stringSupplier) {
-    this
-      .users
-      .stream()
-      .map(User::player)
-      .filter(Objects::nonNull)
-      .forEach(player -> player.sendMessage(stringSupplier.get()))
-    ;
+  @Override
+  public List<BlockPopulator> getDefaultPopulators(World world) {
+    return Collections.emptyList();
+  }
+
+  @Override
+  public boolean canSpawn(World world, int x, int z) {
+    return true;
   }
 }

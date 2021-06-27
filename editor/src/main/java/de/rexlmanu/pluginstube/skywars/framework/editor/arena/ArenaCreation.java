@@ -20,35 +20,26 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.framework.map.format;
+package de.rexlmanu.pluginstube.skywars.framework.editor.arena;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.experimental.Accessors;
+import de.rexlmanu.pluginstube.framework.map.format.MapLayout;
+import de.rexlmanu.pluginstube.framework.map.format.MapPosition;
+import de.rexlmanu.pluginstube.framework.map.format.MapSchema;
+import de.rexlmanu.pluginstube.framework.utility.Builder;
+import org.bukkit.entity.Player;
 
-import java.io.Serializable;
-import java.util.Map;
+public interface ArenaCreation extends Builder<MapSchema> {
 
-/**
- * The Schema format for maps
- */
-@Accessors(fluent = true)
-@AllArgsConstructor
-@Data
-public class MapSchema implements Serializable {
+  String name();
 
-  /**
-   * The name of the schema
-   */
-  private String name;
+  Player player();
 
-  /**
-   * Used to store custom properties like description or other stuff
-   */
-  private Map<String, String> properties;
-  /**
-   * Used to store the relative positions with a key
-   */
-  private Map<String, MapPosition> positions;
-  private MapLayout layout;
+  ArenaCreation withPlayer(Player player);
+
+  void setPosition(String name, MapPosition position);
+
+  void setProperty(String name, String property);
+
+  void setLayout(MapLayout layout);
+
 }

@@ -20,35 +20,42 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.framework.map.format;
+package de.rexlmanu.pluginstube.skywars.framework.editor.arena;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.google.inject.Singleton;
+import de.rexlmanu.pluginstube.skywars.framework.editor.arena.menu.MenuArenaCreation;
+import de.rexlmanu.pluginstube.skywars.framework.editor.process.ArenaCreationProcess;
+import lombok.Getter;
 import lombok.experimental.Accessors;
 
-import java.io.Serializable;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * The Schema format for maps
+ * The factory for {@link ArenaCreation}
  */
+@Singleton
 @Accessors(fluent = true)
-@AllArgsConstructor
-@Data
-public class MapSchema implements Serializable {
+@Getter
+public class ArenaCreationFactory {
+
+  private List<ArenaCreationProcess> processes;
+
+  public ArenaCreationFactory() {
+    this.processes = new ArrayList<>();
+  }
 
   /**
-   * The name of the schema
+   * Create s a {@link ArenaCreation} implementation
+   *
+   * @param name the name for the arena
+   * @return the arena creation process
    */
-  private String name;
+  public ArenaCreation create(String name) {
+    return new MenuArenaCreation(name);
+  }
 
-  /**
-   * Used to store custom properties like description or other stuff
-   */
-  private Map<String, String> properties;
-  /**
-   * Used to store the relative positions with a key
-   */
-  private Map<String, MapPosition> positions;
-  private MapLayout layout;
+  public void abort(ArenaCreationProcess arenaCreationProcess) {
+    this.processes.remove(arenaCreationProcess);
+  }
 }

@@ -20,35 +20,16 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.framework.map.format;
+package de.rexlmanu.pluginstube.skywars.framework.editor.task;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.experimental.Accessors;
+import org.bukkit.scheduler.BukkitTask;
 
-import java.io.Serializable;
-import java.util.Map;
+public interface TaskScheduler {
 
-/**
- * The Schema format for maps
- */
-@Accessors(fluent = true)
-@AllArgsConstructor
-@Data
-public class MapSchema implements Serializable {
+  void sync(Runnable runnable);
 
-  /**
-   * The name of the schema
-   */
-  private String name;
+  void async(Runnable runnable);
 
-  /**
-   * Used to store custom properties like description or other stuff
-   */
-  private Map<String, String> properties;
-  /**
-   * Used to store the relative positions with a key
-   */
-  private Map<String, MapPosition> positions;
-  private MapLayout layout;
+  BukkitTask timer(Runnable runnable, long seconds);
+
 }

@@ -48,6 +48,9 @@ repositories {
   maven {
     url "https://jitpack.io"
   }
+  maven {
+    url "https://repo.it-lampe.de/releases"
+  }
 }
 
 processResources {
@@ -65,7 +68,7 @@ processResources {
 dependencies {
   implementation('org.projectlombok:lombok:1.18.20')
   annotationProcessor('org.projectlombok:lombok:1.18.20')
-  implementation('org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT')
+  implementation('org.spigotmc:spigot-nms:1.8.8-R0.1-SNAPSHOT')
   implementation 'com.github.luben:zstd-jni:1.5.0-2'
 
 

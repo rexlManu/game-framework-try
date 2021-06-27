@@ -20,35 +20,59 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.framework.map.format;
+package de.rexlmanu.pluginstube.skywars.framework.editor.arena.menu;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import de.rexlmanu.pluginstube.framework.map.format.MapLayout;
+import de.rexlmanu.pluginstube.framework.map.format.MapPosition;
+import de.rexlmanu.pluginstube.framework.map.format.MapSchema;
+import de.rexlmanu.pluginstube.framework.utility.Builder;
+import de.rexlmanu.pluginstube.skywars.framework.editor.arena.ArenaCreation;
+import lombok.Getter;
 import lombok.experimental.Accessors;
+import org.bukkit.entity.Player;
 
-import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
-/**
- * The Schema format for maps
- */
 @Accessors(fluent = true)
-@AllArgsConstructor
-@Data
-public class MapSchema implements Serializable {
+@Getter
+public class MenuArenaCreation implements ArenaCreation, Builder<MapSchema> {
 
-  /**
-   * The name of the schema
-   */
   private String name;
-
-  /**
-   * Used to store custom properties like description or other stuff
-   */
   private Map<String, String> properties;
-  /**
-   * Used to store the relative positions with a key
-   */
   private Map<String, MapPosition> positions;
+  private Player player;
   private MapLayout layout;
+
+  public MenuArenaCreation(String name) {
+    this.name = name;
+    this.properties = new HashMap<>();
+    this.positions = new HashMap<>();
+  }
+
+  @Override
+  public ArenaCreation withPlayer(Player player) {
+    this.player = player;
+    return this;
+  }
+
+  @Override
+  public void setPosition(String name, MapPosition position) {
+    this.positions.put(name, position);
+  }
+
+  @Override
+  public void setProperty(String name, String property) {
+    this.properties.put(name, property);
+  }
+
+  @Override
+  public void setLayout(MapLayout layout) {
+    this.layout = layout;
+  }
+
+  @Override
+  public MapSchema build() {
+    return new MapSchema(this.name, this.properties, this.positions, layout);
+  }
 }

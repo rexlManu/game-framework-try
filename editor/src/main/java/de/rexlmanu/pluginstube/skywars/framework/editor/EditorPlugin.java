@@ -22,9 +22,68 @@
 
 package de.rexlmanu.pluginstube.skywars.framework.editor;
 
+import cloud.commandframework.CommandManager;
+import cloud.commandframework.bukkit.BukkitCommandManager;
+import cloud.commandframework.execution.CommandExecutionCoordinator;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import de.rexlmanu.pluginstube.skywars.framework.editor.command.EditorCommand;
+import de.rexlmanu.pluginstube.skywars.framework.editor.process.ParticleTask;
+import de.rexlmanu.pluginstube.skywars.framework.editor.process.ProcessHandler;
+import de.rexlmanu.pluginstube.skywars.framework.editor.task.TaskScheduler;
+import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 @Accessors(fluent = true)
-public class EditorPlugin extends JavaPlugin {
+@Getter
+public class EditorPlugin extends JavaPlugin implements TaskScheduler {
+
+  private CommandManager<Player> commandManager;
+
+  private Injector injector;
+  private ProcessHandler processHandler;
+
+  @SneakyThrows
+  @Override
+  public void onEnable() {
+    this.getDataFolder().mkdir();
+    this.commandManager = new BukkitCommandManager<>(
+      this,
+      CommandExecutionCoordinator.simpleCoordinator(),
+      commandSender -> ((Player) commandSender),
+      player -> player
+    );
+
+    this.injector = Guice.createInjector(new EditorModule(this));
+
+    this.injector.getInstance(EditorCommand.class);
+    this.processHandler = this.injector.getInstance(ProcessHandler.class);
+
+    Bukkit.getPluginManager().registerEvents(this.processHandler, this);
+    ParticleTask task = this.injector.getInstance(ParticleTask.class);
+  }
+
+  @Override
+  public void onDisable() {
+  }
+
+  @Override
+  public void sync(Runnable runnable) {
+    Bukkit.getScheduler().runTask(this, runnable);
+  }
+
+  @Override
+  public void async(Runnable runnable) {
+    Bukkit.getScheduler().runTaskAsynchronously(this, runnable);
+  }
+
+  @Override
+  public BukkitTask timer(Runnable runnable, long seconds) {
+    return Bukkit.getScheduler().runTaskTimerAsynchronously(this, runnable, 0, seconds * 20);
+  }
 }

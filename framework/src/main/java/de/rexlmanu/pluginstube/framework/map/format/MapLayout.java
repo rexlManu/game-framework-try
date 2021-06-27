@@ -27,28 +27,19 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.Map;
+import java.util.List;
 
-/**
- * The Schema format for maps
- */
-@Accessors(fluent = true)
 @AllArgsConstructor
 @Data
-public class MapSchema implements Serializable {
-
+@Accessors(fluent = true)
+public class MapLayout implements Serializable {
   /**
-   * The name of the schema
+   * The block data stored as ingredient
    */
-  private String name;
-
+  private List<MapIngredient> ingredients;
   /**
-   * Used to store custom properties like description or other stuff
+   * The blocks in a region stored with relative positions
+   * Layout is formated for x, y, z, ingredient index
    */
-  private Map<String, String> properties;
-  /**
-   * Used to store the relative positions with a key
-   */
-  private Map<String, MapPosition> positions;
-  private MapLayout layout;
+  private int[][][] blockLayout;
 }

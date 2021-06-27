@@ -20,35 +20,30 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.framework.map.format;
+package de.rexlmanu.pluginstube.skywars.framework.editor.event;
 
+import de.rexlmanu.pluginstube.skywars.framework.editor.arena.ArenaCreation;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.experimental.Accessors;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
-import java.io.Serializable;
-import java.util.Map;
-
-/**
- * The Schema format for maps
- */
 @Accessors(fluent = true)
 @AllArgsConstructor
-@Data
-public class MapSchema implements Serializable {
+@Getter
+public class ArenaCreationRegisterEvent extends Event {
 
-  /**
-   * The name of the schema
-   */
-  private String name;
+  private static final HandlerList HANDLER_LIST = new HandlerList();
 
-  /**
-   * Used to store custom properties like description or other stuff
-   */
-  private Map<String, String> properties;
-  /**
-   * Used to store the relative positions with a key
-   */
-  private Map<String, MapPosition> positions;
-  private MapLayout layout;
+  private ArenaCreation arenaCreation;
+
+  @Override
+  public HandlerList getHandlers() {
+    return HANDLER_LIST;
+  }
+
+  public static HandlerList getHandlerList() {
+    return HANDLER_LIST;
+  }
 }

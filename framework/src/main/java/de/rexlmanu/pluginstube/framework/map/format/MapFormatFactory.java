@@ -22,6 +22,7 @@
 
 package de.rexlmanu.pluginstube.framework.map.format;
 
+import com.google.gson.JsonParser;
 import lombok.experimental.Accessors;
 
 import java.io.ByteArrayInputStream;
@@ -33,6 +34,8 @@ import java.util.zip.GZIPOutputStream;
 
 @Accessors(fluent = true)
 public class MapFormatFactory {
+
+  public static JsonParser PARSER = new JsonParser();
 
   public static byte[] write(MapSchema schema) {
     try {
@@ -48,9 +51,8 @@ public class MapFormatFactory {
       objectOutputStream.close();
       return bytes;
     } catch (Exception exception) {
-      exception.printStackTrace();
+      throw new NullPointerException("Could not write mapschema");
     }
-    return null;
   }
 
   public static MapSchema read(byte[] bytes) {

@@ -20,35 +20,43 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.framework.map.format;
+package org.bukkit.event.server;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.Getter;
+import org.bukkit.command.CommandSender;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
-import java.io.Serializable;
-import java.util.Map;
+import java.util.List;
 
-/**
- * The Schema format for maps
- */
-@Accessors(fluent = true)
 @AllArgsConstructor
-@Data
-public class MapSchema implements Serializable {
+@Getter
+public class TabCompleteEvent extends Event implements Cancellable {
+  private static final HandlerList HANDLER_LIST = new HandlerList();
 
-  /**
-   * The name of the schema
-   */
-  private String name;
+  private String buffer;
+  private List<String> completions;
+  private CommandSender sender;
+  private boolean cancelled;
 
-  /**
-   * Used to store custom properties like description or other stuff
-   */
-  private Map<String, String> properties;
-  /**
-   * Used to store the relative positions with a key
-   */
-  private Map<String, MapPosition> positions;
-  private MapLayout layout;
+  @Override
+  public HandlerList getHandlers() {
+    return HANDLER_LIST;
+  }
+
+  public static HandlerList getHandlerList() {
+    return HANDLER_LIST;
+  }
+
+  @Override
+  public boolean isCancelled() {
+    return cancelled;
+  }
+
+  @Override
+  public void setCancelled(boolean cancel) {
+    this.cancelled = cancel;
+  }
 }

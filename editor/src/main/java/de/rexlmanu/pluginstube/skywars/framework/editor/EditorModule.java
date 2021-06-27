@@ -20,35 +20,27 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.rexlmanu.pluginstube.framework.map.format;
+package de.rexlmanu.pluginstube.skywars.framework.editor;
 
+import cloud.commandframework.CommandManager;
+import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
+import de.rexlmanu.pluginstube.skywars.framework.editor.task.TaskScheduler;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.experimental.Accessors;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
-import java.io.Serializable;
-import java.util.Map;
-
-/**
- * The Schema format for maps
- */
 @Accessors(fluent = true)
 @AllArgsConstructor
-@Data
-public class MapSchema implements Serializable {
+public class EditorModule extends AbstractModule {
+  private EditorPlugin plugin;
 
-  /**
-   * The name of the schema
-   */
-  private String name;
-
-  /**
-   * Used to store custom properties like description or other stuff
-   */
-  private Map<String, String> properties;
-  /**
-   * Used to store the relative positions with a key
-   */
-  private Map<String, MapPosition> positions;
-  private MapLayout layout;
+  @Override
+  protected void configure() {
+    this.bind(Plugin.class).toInstance(this.plugin);
+    this.bind(EditorPlugin.class).toInstance(this.plugin);
+    this.bind(TaskScheduler.class).toInstance(this.plugin);
+    this.bind(new TypeLiteral<CommandManager<Player>>() {}).toInstance(this.plugin.commandManager());
+  }
 }

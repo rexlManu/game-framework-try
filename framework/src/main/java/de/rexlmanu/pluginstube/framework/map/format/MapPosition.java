@@ -25,6 +25,7 @@ package de.rexlmanu.pluginstube.framework.map.format;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.bukkit.Location;
 
 import java.io.Serializable;
 
@@ -35,6 +36,16 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Data
 public class MapPosition implements Serializable {
+  public static MapPosition of(Location location) {
+    return new MapPosition(
+      location.getBlockX(),
+      location.getBlockY(),
+      location.getBlockZ(),
+      location.getYaw(),
+      location.getPitch()
+    );
+  }
+
   private int x, y, z;
   private float yaw, pitch;
 }
